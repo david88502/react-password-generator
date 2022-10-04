@@ -1,4 +1,3 @@
-import './App.css';
 import MainScreen from './components/MainScreen';
 
 import React from 'react';
