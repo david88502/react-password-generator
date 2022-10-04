@@ -41,18 +41,29 @@ export default function Generator() {
           <div>
             <h3>{password}</h3>
           </div>
-          <Form className="mt-3" onSubmit={handleGeneratePassword}>
-            <Form.Group className="mb-3" controlId="passwordLength">
+          <Form
+            className="d-flex flex-column mt-3"
+            onSubmit={handleGeneratePassword}
+          >
+            <Form.Group
+              className="mb-3 d-flex justify-content-between"
+              controlId="passwordLength"
+            >
               <Form.Label>Password length</Form.Label>
               <Form.Control
                 type="number"
+                className="form-control-sm"
                 onChange={(e) => setPasswordLength(e.target.value)}
                 defaultValue={passwordLength}
                 min={minPasswordLength}
                 max={maxPasswordLength}
+                style={{ width: '4rem' }}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="includeUpperCase">
+            <Form.Group
+              className="mb-3 d-flex justify-content-between"
+              controlId="includeUpperCase"
+            >
               <Form.Label>Add Uppercase Letters</Form.Label>
               <Form.Control
                 type="checkbox"
@@ -61,7 +72,10 @@ export default function Generator() {
                 checked={includeUpperCase}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="includeLowerCase">
+            <Form.Group
+              className="mb-3 d-flex justify-content-between"
+              controlId="includeLowerCase"
+            >
               <Form.Label>Add Lowercase Letters</Form.Label>
               <Form.Control
                 type="checkbox"
@@ -70,7 +84,10 @@ export default function Generator() {
                 checked={includeLowerCase}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="includeNumbers">
+            <Form.Group
+              className="mb-3 d-flex justify-content-between"
+              controlId="includeNumbers"
+            >
               <Form.Label>Include Numbers</Form.Label>
               <Form.Control
                 type="checkbox"
@@ -79,7 +96,10 @@ export default function Generator() {
                 checked={includeNumbers}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="includeSymbols">
+            <Form.Group
+              className="mb-3 d-flex justify-content-between"
+              controlId="includeSymbols"
+            >
               <Form.Label>Include Symbols</Form.Label>
               <Form.Control
                 type="checkbox"
