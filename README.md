@@ -1,2 +1,3 @@
 # React Password Generator
-A password generator build with React.
+
+Live Demo: https://david-wang-react-password-generator.netlify.app
