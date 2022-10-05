@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import { Card, Button, Container, Row, Col, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { Card, Button, Form, Alert } from 'react-bootstrap';
 import {
   numbers,
   upperCaseLetters,
   lowerCaseLetters,
   specialCharacters,
-} from '../utils.js/Character';
+} from '../utils/Character';
+import { COPY_SUCCESS, COPY_FAIL } from '../utils/CopyMessage';
 export default function Generator() {
   const [password, setPassword] = useState('');
   const [passwordLength, setPasswordLength] = useState(26);
@@ -14,12 +15,36 @@ export default function Generator() {
   const [includeLowerCase, setIncludeLowerCase] = useState(false);
   const [includeNumbers, setIncludeNumbers] = useState(false);
   const [includeSymbols, setIncludeSymbols] = useState(false);
-
-  const maxPasswordLength = 26;
+  const [iconIsChecked, setIconIsChecked] = useState(false);
+  const maxPasswordLength = 128;
   const minPasswordLength = 8;
 
   const handleGeneratePassword = (event) => {
     event.preventDefault();
+    if (
+      !includeUpperCase &&
+      !includeLowerCase &&
+      !includeNumbers &&
+      !includeSymbols
+    ) {
+      notify('Please select at least one checkbox', true);
+    } else {
+      let characterList = '';
+      if (includeNumbers) {
+        characterList = characterList + numbers;
+      }
+      if (includeUpperCase) {
+        characterList = characterList + upperCaseLetters;
+      }
+      if (includeLowerCase) {
+        characterList = characterList + lowerCaseLetters;
+      }
+      if (includeSymbols) {
+        characterList = characterList + specialCharacters;
+      }
+      setPassword(createPassword(characterList));
+      notify('Password is generated successfully', false);
+    }
   };
 
   const createPassword = (characterList) => {
@@ -31,6 +56,40 @@ export default function Generator() {
     }
     return password;
   };
+
+  const notify = (message, hasError = false) => {
+    const toastOptions = {
+      position: 'top-center',
+      autoClose: 2500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
+    if (hasError) {
+      toast.error(message, toastOptions);
+    } else {
+      toast(message, toastOptions);
+    }
+  };
+
+  const copyToClipboard = (password) => {
+    navigator.clipboard.writeText(password);
+  };
+
+  const handleCopyPassword = () => {
+    if (password === '') {
+      notify(COPY_FAIL, true);
+    } else {
+      setIconIsChecked(true);
+      setTimeout(() => {
+        setIconIsChecked(false);
+      }, 2000);
+      copyToClipboard(password);
+      notify(COPY_SUCCESS);
+    }
+  };
   return (
     <>
       <Card style={{ width: '18rem' }} className="shadow">
@@ -38,9 +97,24 @@ export default function Generator() {
           <Card.Title className="text-center">
             React Password Generator
           </Card.Title>
-          <div>
-            <h3>{password}</h3>
-          </div>
+          <Alert
+            variant="success"
+            className="d-flex align-items-center justify-content-end mt-3"
+            style={{ height: '3rem' }}
+          >
+            <div className="text-truncate flex-grow-1">{password}</div>
+            <Button
+              onClick={handleCopyPassword}
+              className="btn-light bg-transparent px-0 btn-lg"
+              style={{ border: 0 }}
+            >
+              {iconIsChecked ? (
+                <i class="bi bi-check" />
+              ) : (
+                <i class="bi bi-clipboard" />
+              )}
+            </Button>
+          </Alert>
           <Form
             className="d-flex flex-column mt-3"
             onSubmit={handleGeneratePassword}
@@ -114,17 +188,6 @@ export default function Generator() {
           </Form>
         </Card.Body>
       </Card>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </>
   );
 }
